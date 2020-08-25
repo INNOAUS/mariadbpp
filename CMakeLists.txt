@@ -11,14 +11,14 @@ option(MARIADBPP_TEST "Build mariadbpp tests" OFF)
 option(MARIADBPP_DOC "Build mariadbpp docs" OFF)
 
 # add additional cmake modules
-list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/external/cmake-modules")
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_CURRENT_SOURCE_DIR}/external/cmake-modules")
 
 # dependencies
 find_package(MariaDBClient REQUIRED)
 find_package(Threads REQUIRED)
 
 # find files
-file(GLOB mariadbclientpp_PUBLIC_HEADERS include/mariadb++/*)
+file(GLOB mariadbclientpp_PUBLIC_HEADERS /usr/include/mariadb++/*)
 file(GLOB mariadbclientpp_PRIVATE_HEADERS src/*.hpp)
 file(GLOB mariadbclientpp_SOURCES src/*.cpp)
 
@@ -26,11 +26,12 @@ file(GLOB mariadbclientpp_SOURCES src/*.cpp)
 add_library(mariadbclientpp ${mariadbclientpp_SOURCES} ${mariadbclientpp_PUBLIC_HEADERS} ${mariadbclientpp_PRIVATE_HEADERS})
 
 # target options
-target_link_libraries(mariadbclientpp MariaDBClient::MariaDBClient Threads::Threads)
+target_link_libraries(mariadbclientpp mariadbclient_LIBRARY Threads::Threads)
 
 target_include_directories(
 	mariadbclientpp
 	PUBLIC
+        "/usr/include/mysql"
 	"$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
 	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 
